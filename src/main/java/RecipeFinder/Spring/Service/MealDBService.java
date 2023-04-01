@@ -7,7 +7,10 @@ import org.springframework.web.client.RestTemplate;
 public class MealDBService {
     RestTemplate restTemplate;
     final String apiURi = "https://www.themealdb.com/api/json/v1/1/";
-    
+    public static String dictToList(String dict){
+        //to convert json meals dict to list
+        return dict.substring(9,dict.length()-1);
+    }
     public String randomMeal(){
         final String uri = apiURi+"random.php";
         restTemplate = new RestTemplate();
