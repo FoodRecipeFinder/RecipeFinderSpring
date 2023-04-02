@@ -26,7 +26,17 @@ public class RecipeFinderService {
 		return dao.login(email, password);
 	}
 	
-	public boolean saveRecipe(SavedRecipes sr) {
+//	public boolean saveRecipe(SavedRecipes sr) {
+//		if(dao.saveRecipe(sr)!=null) 
+//			return true;
+//		else
+//			return false;
+//	}
+	public boolean saveRecipe(int userId,int mealId) {
+		User user = dao.searchUserById(userId);
+		SavedRecipes sr =  new SavedRecipes();
+		sr.setMealId(mealId);
+		sr.setUser(user);
 		if(dao.saveRecipe(sr)!=null) 
 			return true;
 		else
@@ -34,13 +44,22 @@ public class RecipeFinderService {
 	}
 	
 	public List<SavedRecipes> getSavedRecipes(int userId){
-		return dao.getSavedRecipes(userId);
+		return dao.searchUserById(userId).getSavedRecipes();
 	}
 	
 	public boolean removeRecipe(int recipeId) {
-		return dao.deleteRecipe(recipeId);
+		try {
+			dao.deleteRecipe(recipeId);
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		 
 	}
 	public boolean checkIfSaved(int userId,int mealId) {
 		return dao.checkIfSaved(userId,mealId);
 	}
+	
 }
