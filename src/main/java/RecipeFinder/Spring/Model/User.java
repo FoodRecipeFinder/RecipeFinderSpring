@@ -1,9 +1,14 @@
 package RecipeFinder.Spring.Model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -11,7 +16,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="userData")
+@Table(name = "userDetails")
 @ToString(includeFieldNames = true)
 @Getter
 @Setter
@@ -23,4 +28,6 @@ public class User {
 	private String email;
 	private String password;
 	
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	List<SavedRecipes> savedRecipes;
 }
