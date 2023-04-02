@@ -1,7 +1,5 @@
 package RecipeFinder.Spring.Dao;
 
-import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 import RecipeFinder.Spring.Model.SavedRecipes;
@@ -13,7 +11,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Repository
-public class RecipeFinderDao {
+public class RecipeFinderDao{
 	@PersistenceContext
 	EntityManager em;
 	
@@ -52,44 +50,37 @@ public class RecipeFinderDao {
 		return true;
 	}
 
+	public User searchUserById(int userId) {
+		return em.find(User.class, userId);
+	}
 	@Transactional
 	public SavedRecipes saveRecipe(SavedRecipes sr) {
 		return em.merge(sr);
 	}
+
 	
-	public List<SavedRecipes> getSavedRecipes(int userId){
-		String jpql = "select a from SavedRecipes a where a.userId=:userId";
-		TypedQuery<SavedRecipes> query = em.createQuery(jpql,SavedRecipes.class);
-		query.setParameter("userId", userId);
-		return query.getResultList();
-	}
-	
-	@Transactional
-	public boolean deleteRecipe(int recipeId) {
-		SavedRecipes recipe = em.find(SavedRecipes.class, recipeId);
-		
-		try {
-			if(recipe!=null) {
-				em.remove(recipe);
-			}
-			return true;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 	
 	public boolean checkIfSaved(int userId,int mealId) {
-		String jpql = "select a from SavedRecipes a where a.userId=:userId and a.mealId=:mealId";
-		TypedQuery<SavedRecipes> query = em.createQuery(jpql,SavedRecipes.class);
-		query.setParameter("userId", userId);
-		query.setParameter("mealId", mealId);
-		 
-		if(query.getResultList().isEmpty()) 
-			return false;
-		else
-			return true;
+		User user = searchUserById(userId);
+		System.out.println(mealId);
+		boolean res  = false;
 		
+		for(SavedRecipes recipe: user.getSavedRecipes()) {
+			if(recipe.getMealId() == mealId) {
+				res=true;
+				break;
+			}
+		}
+		return res;
 	}
+	
+	
+	@Transactional
+	public void deleteRecipe(int recipeId) {
+		String jpql="delete from SavedRecipes c where id=:recipeId";
+	    Query query = em.createQuery(jpql);
+	    query.setParameter("recipeId", recipeId).executeUpdate();
+	    System.out.println("deleted");
+	}
+		
 }
