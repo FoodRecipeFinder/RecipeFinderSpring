@@ -36,7 +36,7 @@ public class MealDBService {
         final String uri = apiURi+"list.php?"+type+"=list";
         restTemplate = new RestTemplate();
         String meal = restTemplate.getForObject(uri, String.class);
-        return meal;
+        return dictToList(meal);
     }
     
     public String filter(Character type, String ingredient){
