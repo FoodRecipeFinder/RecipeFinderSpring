@@ -62,4 +62,7 @@ public class RecipeFinderService {
 		return dao.checkIfSaved(userId,mealId);
 	}
 	
+	public int getSavedRecipeId(int userId,int mealId) {
+		return dao.getSavedRecipeId(userId, mealId);
+	}
 }
