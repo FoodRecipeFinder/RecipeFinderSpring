@@ -3,6 +3,7 @@ package RecipeFinder.Spring.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import RecipeFinder.Spring.Service.RecipeFinderService;
 
 @RestController
 @RequestMapping("/RecipeFinder")
+@CrossOrigin("*")
 public class RecipeFinderController {
 	
 	@Autowired
@@ -52,6 +54,10 @@ public class RecipeFinderController {
 	public boolean checkIfSaved(@RequestParam int userId,int mealId) {
 		return service.checkIfSaved(userId,mealId);
 	}
-//	
+	
+	@GetMapping(value = "/getSavedRecipeId")
+	public int getSavedRecipeId(@RequestParam int userId,int mealId) {
+		return service.getSavedRecipeId(userId, mealId);
+	}
     
 }

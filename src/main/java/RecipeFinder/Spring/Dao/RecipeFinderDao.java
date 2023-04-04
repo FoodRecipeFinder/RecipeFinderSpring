@@ -1,5 +1,9 @@
 package RecipeFinder.Spring.Dao;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Repository;
 
 import RecipeFinder.Spring.Model.SavedRecipes;
@@ -53,6 +57,7 @@ public class RecipeFinderDao{
 	public User searchUserById(int userId) {
 		return em.find(User.class, userId);
 	}
+	
 	@Transactional
 	public SavedRecipes saveRecipe(SavedRecipes sr) {
 		return em.merge(sr);
@@ -62,7 +67,7 @@ public class RecipeFinderDao{
 	
 	public boolean checkIfSaved(int userId,int mealId) {
 		User user = searchUserById(userId);
-		System.out.println(mealId);
+//		System.out.println(mealId);
 		boolean res  = false;
 		
 		for(SavedRecipes recipe: user.getSavedRecipes()) {
@@ -81,6 +86,12 @@ public class RecipeFinderDao{
 	    Query query = em.createQuery(jpql);
 	    query.setParameter("recipeId", recipeId).executeUpdate();
 	    System.out.println("deleted");
+		
 	}
 		
+	public int getSavedRecipeId(int userId,int mealId) {
+		List<SavedRecipes> data =searchUserById(userId).getSavedRecipes().stream().filter(e->e.getMealId() == mealId).toList();
+		return data.get(0).getId();
+	}
+	
 }
