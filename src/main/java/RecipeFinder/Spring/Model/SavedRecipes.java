@@ -16,7 +16,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString(includeFieldNames = true)
+@ToString()
 public class SavedRecipes {
 	@Id
 	@SequenceGenerator(initialValue = 1000,allocationSize = 1, name = "sr_seq")

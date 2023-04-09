@@ -1,8 +1,6 @@
 package RecipeFinder.Spring.Dao;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,41 +16,42 @@ import jakarta.transaction.Transactional;
 public class RecipeFinderDao{
 	@PersistenceContext
 	EntityManager em;
-	
-	@Transactional
-	public User addUser(User user) {
-		if(!emailExist(user.getEmail())) 
-			return em.merge(user);
-		else 
-			return null;
-		
-	}
+
 	
 	public boolean emailExist(String email) {
 		String jpql = "select u from User u where u.email=: email"; 
 		TypedQuery<User> query = em.createQuery(jpql,User.class);
 		query.setParameter("email", email);
 		
-		if(query.getResultList().isEmpty()) {
-			return false;
-		}
-		else
-			return true;
+		return query.getResultList().isEmpty()?false:true;
 	}
 	
-	public boolean login(String email,String password) {
-		String jpql = "select u from User u where u.email=:email and u.password=:password";
-		TypedQuery<User> query = em.createQuery(jpql, User.class);
+	public User searchUserByEmail(String email) {
+		String jpql = "select u from User u where u.email=: email"; 
+		TypedQuery<User> query = em.createQuery(jpql,User.class);
 		query.setParameter("email", email);
-		query.setParameter("password", password);
 		
-		try {
-			query.getSingleResult();
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
+		return query.getResultList().get(0);
 	}
+	
+	@Transactional
+	public User addOrUpdateUser(User user) {
+		return em.merge(user);
+	}
+	
+//	public boolean login(String email,String password) {
+//		String jpql = "select u from User u where u.email=:email and u.password=:password";
+//		TypedQuery<User> query = em.createQuery(jpql, User.class);
+//		query.setParameter("email", email);
+//		query.setParameter("password", password);
+//		
+//		try {
+//			query.getSingleResult();
+//		} catch (Exception e) {
+//			return false;
+//		}
+//		return true;
+//	}
 
 	public User searchUserById(int userId) {
 		return em.find(User.class, userId);
