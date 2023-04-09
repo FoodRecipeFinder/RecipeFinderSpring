@@ -1,5 +1,6 @@
 package RecipeFinder.Spring.Model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -16,7 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "userDetails")
+@Table(name = "userData")
 @ToString(includeFieldNames = true)
 @Getter
 @Setter
@@ -27,6 +28,9 @@ public class User {
 	private int userId;
 	private String email;
 	private String password;
+	
+	private int one_time_password;
+	private LocalDateTime otp_captured_time;
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	List<SavedRecipes> savedRecipes;
