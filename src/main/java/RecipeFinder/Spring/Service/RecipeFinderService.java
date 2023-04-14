@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import RecipeFinder.Spring.Dao.RecipeFinderDao;
@@ -18,7 +20,7 @@ public class RecipeFinderService {
 	RecipeFinderDao dao;
 	
 	@Autowired EmailService emailService;
-	
+	private static final PasswordEncoder pwEncoder = new BCryptPasswordEncoder();
 	public boolean isEmailExist(String email) {
 		return dao.emailExist(email);
 	}
@@ -35,6 +37,8 @@ public class RecipeFinderService {
 //		User u = new User();
 //		u.setEmail(email);
 //		u.setPassword(password);
+
+		u.setPassword(pwEncoder.encode(u.getPassword()));
 		if(dao.addOrUpdateUser(u)!= null) 
 			return true;
 		else
@@ -82,7 +86,8 @@ public class RecipeFinderService {
 
 	
 	public boolean loginByPassword(String email,String password) {
-		return dao.searchUserByEmail(email).getPassword().equals(password) ? true:false;
+		return pwEncoder.matches(password,dao.searchUserByEmail(email).getPassword()) ? true:false;
+//		return dao.searchUserByEmail(email).getPassword().equals(pwEncoder.encode(password)) ? true:false;
 	}
 	
 	
