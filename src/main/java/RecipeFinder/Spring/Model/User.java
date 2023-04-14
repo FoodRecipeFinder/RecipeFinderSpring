@@ -29,7 +29,7 @@ public class User {
 	private String email;
 	private String password;
 	
-	private int one_time_password;
+	private String one_time_password;
 	private LocalDateTime otp_captured_time;
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
