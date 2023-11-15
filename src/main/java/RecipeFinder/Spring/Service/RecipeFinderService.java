@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,7 +41,7 @@ public class RecipeFinderService {
 //		u.setPassword(password);
 
 		u.setPassword(pwEncoder.encode(u.getPassword()));
-		if(dao.addOrUpdateUser(u)!= null) 
+		if(dao.addOrUpdateUser(u)!= null)
 			return true;
 		else
 			return false;
@@ -62,8 +64,15 @@ public class RecipeFinderService {
 //			System.out.println("user : "+user);
 			
 			if(dao.addOrUpdateUser(user)!=null) {
-				emailService.sendOtp(user.getEmail(), text, subject);
-				System.out.println("Email Sent");
+				ExecutorService emailExecutor = Executors.newCachedThreadPool();
+				emailExecutor.execute(() -> {
+					try {
+						emailService.sendOtp(user.getEmail(), text, subject);
+						System.out.println("Email Sent");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
 				return true;
 			}
 			else
