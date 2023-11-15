@@ -1,4 +1,4 @@
-#Recipe Finder Spring
+# Recipe Finder Spring
 
 ## Environment Variables
 * `DB_URL`= jdbc:postgresql://localhost:5432/demo
