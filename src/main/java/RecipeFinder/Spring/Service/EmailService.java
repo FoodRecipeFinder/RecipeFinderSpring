@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 public class EmailService {
 	@Autowired
     MailSender mailSender;
-	
-	
+
+
     public void sendOtp(String email,String text,String subject) {
         SimpleMailMessage message=new SimpleMailMessage();
         message.setTo(email);
-        message.setFrom("projectuse16@outlook.com");
+        message.setFrom(System.getenv("MAIL_EMAIL"));
         message.setSubject(subject);
         message.setText(text);
 
